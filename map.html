@@ -50,7 +50,7 @@
                 // Push all the points in the shape into the linestring:
                 routeShape.forEach(function (point) {
                     var parts = point.split(',');
-                    linestring.push"lat""lng"Alt(parts[0], parts[1]);
+                    linestring.pushLatLngAlt(parts[0], parts[1]);
                 });
 
                 // Retrieve the mapped positions of the requested waypoints:
@@ -64,14 +64,14 @@
 
                 // Create a marker for the start point:
                 var startMarker = new H.map.Marker({
-                    "lat": startPoint."lat"itude,
-                    "lng": startPoint.longitude
+                    lat: startPoint.latitude,
+                    lng: startPoint.longitude
                 });
 
                 // Create a marker for the end point:
                 var endMarker = new H.map.Marker({
-                    "lat": endPoint."lat"itude,
-                    "lng": endPoint.longitude
+                    lat: endPoint.latitude,
+                    lng: endPoint.longitude
                 });
 
                 // Add the route polyline and the two markers to the map:
@@ -81,9 +81,9 @@
                 map.setViewBounds(routeLine.getBounds());
             }
         };
-        // Instantiate the P"lat"form class with authentication and
+        // Instantiate the Platform class with authentication and
         // authorization credentials:
-        var p"lat"form = new H.service.P"lat"form({
+        var platform = new H.service.Platform({
             app_id: 'hYPYRdimXjLFkQj0cguW',
             app_code: 'xRFqWf6_lQ3NQTr8lEMkIQ'
         });
@@ -91,8 +91,8 @@
         // Instantiate a map inside the DOM element with id map. The
         // map center is in San Francisco, the zoom level is 10:
         var map = new H.Map(document.getElementById('map'),
-            p"lat"form.createDefaultLayers().normal.map, {
-                center: { "lat": 55.738262, "lng": 37.541489 },
+            platform.createDefaultLayers().normal.map, {
+                center: { lat: 55.738262, lng: 37.541489 },
                 zoom: 13
             });
 
@@ -100,16 +100,16 @@
         var group = new H.map.Group();
 
         // Create the default UI components:
-        var ui = H.ui.UI.createDefault(map, p"lat"form.createDefaultLayers());
+        var ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
         var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
         var svgMarkup = 'mall.png';
         var svgMark = 'icons8-marker-40.png';
 
-        // Create an icon, an object holding the "lat"itude and longitude, and a marker:
+        // Create an icon, an object holding the latitude and longitude, and a marker:
         var icon = new H.map.Icon(svgMarkup);
         var iconlocation = new H.map.Icon(svgMark);
-        coords = { "lat": 55.738262, "lng": 37.541489 };
+        coords = { lat: 55.738262, lng: 37.541489 };
         marker = new H.map.Marker(coords, { icon: iconlocation });
         map.addObject(marker);
         //  mapInstance.addObject(marker);
@@ -119,17 +119,17 @@
 map.addEventListener('tap', function (evt) {
     var coord = map.screenToGeo(evt.currentPointer.viewportX,
             evt.currentPointer.viewportY);
-    console.log( '"lat":' + Math.abs(coord."lat".toFixed(4)) +
-        ((coord."lat" > 0) ? '' : '') +
-        ', "lng":' + Math.abs(coord."lng".toFixed(4)) +
-         ((coord."lng" > 0) ? '' : ''));
+    console.log( 'lat:' + Math.abs(coord.lat.toFixed(4)) +
+        ((coord.lat > 0) ? '' : '') +
+        ', lng:' + Math.abs(coord.lng.toFixed(4)) +
+         ((coord.lng > 0) ? '' : ''));
 })
 
         $.post("http://172.31.18.84:9005/api/getAllMalls", function (data) {
             for (i = 0; i < data.result.length; i++) {
-                console.log(data.result[i]."lat")
+                console.log(data.result[i].lat)
 
-                coords = { "lat": data.result[i]."lat", "lng": data.result[i]."lng" }
+                coords = { lat: data.result[i].lat, lng: data.result[i].lng }
                 marker = new H.map.Marker(coords, { icon: icon });
                 map.addObject(marker);
                 marker.count = false
@@ -145,15 +145,15 @@ map.addEventListener('tap', function (evt) {
                         // The start point of the route:
                         'waypoint0': 'geo!55.738262,37.541489',
                         // The end point of the route:
-                        'waypoint1': 'geo!' + evt.currentTarget.b."lat" + ',' + evt.currentTarget.b."lng",
+                        'waypoint1': 'geo!' + evt.currentTarget.b.lat + ',' + evt.currentTarget.b.lng,
                         // To retrieve the shape of the route we choose the route
                         // representation mode 'display'
                         'representation': 'display'
                     };
                     evt.target.count = !evt.target.count ;
                     console.log(evt.target.count);
-                    var router = p"lat"form.getRoutingService();
-                    router.calcu"lat"eRoute(routingParameters, onResult,
+                    var router = platform.getRoutingService();
+                    router.calculateRoute(routingParameters, onResult,
                         function (error) {
                             alert(error.message);
                         });
@@ -161,11 +161,11 @@ map.addEventListener('tap', function (evt) {
 
                     }  else {  // var targetElement = document.getElementById('map');
 
-// Get the default map types from the p"lat"form object:
-var defaultLayers = p"lat"form.createDefaultLayers();
+// Get the default map types from the platform object:
+var defaultLayers = platform.createDefaultLayers();
 map.setZoom( 17);
 
-map.setCenter({"lat": evt.currentTarget.b."lat","lng": evt.currentTarget.b."lng"});
+map.setCenter({lat: evt.currentTarget.b.lat,lng: evt.currentTarget.b.lng});
 
 
 // Add the venue layer to the map:
@@ -173,20 +173,20 @@ map.addLayer(defaultLayers.venues);
 
 
 var points = [
-{ "lat":55.7455, "lng":37.5652},
-{ "lat":55.7454, "lng":37.5652},
-{ "lat":55.7453, "lng":37.5653},
-{ "lat":55.7452, "lng":37.5654},
-{ "lat":55.745, "lng":37.5654},
-{ "lat":55.745, "lng":37.5655},
-{ "lat":55.7449, "lng":37.5657},
-{ "lat":55.7449, "lng":37.5659},
-{ "lat":55.7449, "lng":37.5662},
-{ "lat":55.7448, "lng":37.5664},
-{ "lat":55.7448, "lng":37.5666},
-{ "lat":55.7447, "lng":37.5667},
-{ "lat":55.7446, "lng":37.5667},
-{ "lat":55.7445, "lng":37.5666},
+{ lat:55.7455, lng:37.5652},
+{ lat:55.7454, lng:37.5652},
+{ lat:55.7453, lng:37.5653},
+{ lat:55.7452, lng:37.5654},
+{ lat:55.745, lng:37.5654},
+{ lat:55.745, lng:37.5655},
+{ lat:55.7449, lng:37.5657},
+{ lat:55.7449, lng:37.5659},
+{ lat:55.7449, lng:37.5662},
+{ lat:55.7448, lng:37.5664},
+{ lat:55.7448, lng:37.5666},
+{ lat:55.7447, lng:37.5667},
+{ lat:55.7446, lng:37.5667},
+{ lat:55.7445, lng:37.5666},
 ]
 
 var linestring = new H.geo.LineString();
@@ -220,7 +220,7 @@ var heatmapProvider = new H.data.heatmap.Provider({
                                 response.json().then(function(data) {
                                     for (i=0; i<data.length;i++) {
                                         heatmapProvider.addData([
-                                        {"lat": data[i]."lat", "lng": data[i]."lng", value: 1}
+                                        {lat: data[i].lat, lng: data[i].lng, value: 1}
                                         ]);
                                         console.log(data[i]);
                                     i++;
@@ -249,8 +249,8 @@ var heatmapProvider = new H.data.heatmap.Provider({
         function addPlacesToMap(result) {
             group.addObjects(result.items.map(function (place) {
                 var marker = new H.map.Marker({
-                    "lat": place.position[0],
-                    "lng": place.position[1]
+                    lat: place.position[0],
+                    lng: place.position[1]
                 }, { icon: icon })
                 return marker;
             }));
