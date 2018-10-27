@@ -1,172 +1,266 @@
 <!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <head>
-                <meta name="viewport" content="initial-scale=1.0, 
+        <meta name="viewport" content="initial-scale=1.0, 
                   width=device-width" />
-                <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" 
-                  type="text/javascript" charset="utf-8"></script>
-                <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" 
-                  type="text/javascript" charset="utf-8"></script>
-                <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" 
-                  type="text/javascript" charset="utf-8"></script>
-                  <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" 
-                  type="text/javascript" charset="utf-8"></script>
-                <script type="text/javascript" charset="UTF-8"
-                  src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
-                  <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
-                <link rel="stylesheet" type="text/css" 
-                  href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
-              </head>
-                
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="UTF-8" src="http://js.api.here.com/v3/3.0/mapsjs-places.js"></script>
+        <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+        <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-data.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
     </head>
-    <body>
-            <div id="map" style="width: 640px; height: 480px"/>
-            <script type="text/javascript" charset="utf-8">
-                var onResult = function(result) {
-                                var route,
-                                    routeShape,
-                                    startPoint,
-                                    endPoint,
-                                    linestring;
-                                    console.log(result);
-                                if(result.response.route) {
-                                // Pick the first route from the response:
-                                route = result.response.route[0];
-                                // Pick the route's shape:
-                                routeShape = route.shape;
 
-                                // Create a linestring to use as a point source for the route line
-                                linestring = new H.geo.LineString();
 
-                                // Push all the points in the shape into the linestring:
-                                routeShape.forEach(function(point) {
-                                    var parts = point.split(',');
-                                    linestring.pushLatLngAlt(parts[0], parts[1]);
-                                });
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-                                // Retrieve the mapped positions of the requested waypoints:
-                                startPoint = route.waypoint[0].mappedPosition;
-                                endPoint = route.waypoint[1].mappedPosition;
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
 
-                                // Create a polyline to display the route:
-                                var routeLine = new H.map.Polyline(linestring, {
-                                    style: { strokeColor: 'blue', lineWidth: 10 }
-                                });
+<body>
+    <div id="map" style="width: 640px; height: 480px" />
+    <script type="text/javascript" charset="utf-8">
+        var onResult = function (result) {
+            var route,
+                routeShape,
+                startPoint,
+                endPoint,
+                linestring;
+            console.log(result);
+            if (result.response.route) {
+                // Pick the first route from the response:
+                route = result.response.route[0];
+                // Pick the route's shape:
+                routeShape = route.shape;
 
-                                // Create a marker for the start point:
-                                var startMarker = new H.map.Marker({
-                                    lat: startPoint.latitude,
-                                    lng: startPoint.longitude
-                                });
+                // Create a linestring to use as a point source for the route line
+                linestring = new H.geo.LineString();
 
-                                // Create a marker for the end point:
-                                var endMarker = new H.map.Marker({
-                                    lat: endPoint.latitude,
-                                    lng: endPoint.longitude
-                                });
-
-                                // Add the route polyline and the two markers to the map:
-                                map.addObjects([routeLine, startMarker, endMarker]);
-
-                                // Set the map's viewport to make the whole route visible:
-                                map.setViewBounds(routeLine.getBounds());
-                                }
-                            };
-              // Instantiate the Platform class with authentication and
-              // authorization credentials:
-              var platform = new H.service.Platform({
-                app_id: 'hYPYRdimXjLFkQj0cguW',
-                app_code: 'xRFqWf6_lQ3NQTr8lEMkIQ'
-              });
-          
-              // Instantiate a map inside the DOM element with id map. The
-              // map center is in San Francisco, the zoom level is 10:
-              var map = new H.Map(document.getElementById('map'),
-                platform.createDefaultLayers().normal.map, {
-                center: {lat: 55.738262, lng:  37.541489},
-                zoom: 13
+                // Push all the points in the shape into the linestring:
+                routeShape.forEach(function (point) {
+                    var parts = point.split(',');
+                    linestring.push"lat""lng"Alt(parts[0], parts[1]);
                 });
-          
-              // Create a group object to hold map markers:
-              var group = new H.map.Group();
-          
-              // Create the default UI components:
-              var ui = H.ui.UI.createDefault(map, platform.createDefaultLayers());
-              var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
-              var svgMarkup = 'mall.png';
-              var svgMark = 'icons8-marker-40.png';
-              
-// Create an icon, an object holding the latitude and longitude, and a marker:
-                var icon = new H.map.Icon(svgMarkup);
-                var iconlocation = new H.map.Icon(svgMark);
-                coords = {lat: 55.738262, lng:  37.541489};
-                marker = new H.map.Marker(coords, {icon: iconlocation});
+                // Retrieve the mapped positions of the requested waypoints:
+                startPoint = route.waypoint[0].mappedPosition;
+                endPoint = route.waypoint[1].mappedPosition;
+
+                // Create a polyline to display the route:
+                var routeLine = new H.map.Polyline(linestring, {
+                    style: { strokeColor: 'blue', lineWidth: 10 }
+                });
+
+                // Create a marker for the start point:
+                var startMarker = new H.map.Marker({
+                    "lat": startPoint."lat"itude,
+                    "lng": startPoint.longitude
+                });
+
+                // Create a marker for the end point:
+                var endMarker = new H.map.Marker({
+                    "lat": endPoint."lat"itude,
+                    "lng": endPoint.longitude
+                });
+
+                // Add the route polyline and the two markers to the map:
+                map.addObjects([routeLine, startMarker, endMarker]);
+
+                // Set the map's viewport to make the whole route visible:
+                map.setViewBounds(routeLine.getBounds());
+            }
+        };
+        // Instantiate the P"lat"form class with authentication and
+        // authorization credentials:
+        var p"lat"form = new H.service.P"lat"form({
+            app_id: 'hYPYRdimXjLFkQj0cguW',
+            app_code: 'xRFqWf6_lQ3NQTr8lEMkIQ'
+        });
+
+        // Instantiate a map inside the DOM element with id map. The
+        // map center is in San Francisco, the zoom level is 10:
+        var map = new H.Map(document.getElementById('map'),
+            p"lat"form.createDefaultLayers().normal.map, {
+                center: { "lat": 55.738262, "lng": 37.541489 },
+                zoom: 13
+            });
+
+        // Create a group object to hold map markers:
+        var group = new H.map.Group();
+
+        // Create the default UI components:
+        var ui = H.ui.UI.createDefault(map, p"lat"form.createDefaultLayers());
+        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        var svgMarkup = 'mall.png';
+        var svgMark = 'icons8-marker-40.png';
+
+        // Create an icon, an object holding the "lat"itude and longitude, and a marker:
+        var icon = new H.map.Icon(svgMarkup);
+        var iconlocation = new H.map.Icon(svgMark);
+        coords = { "lat": 55.738262, "lng": 37.541489 };
+        marker = new H.map.Marker(coords, { icon: iconlocation });
+        map.addObject(marker);
+        //  mapInstance.addObject(marker);
+        // Add the group object to the map:
+        map.addObject(group);
+
+map.addEventListener('tap', function (evt) {
+    var coord = map.screenToGeo(evt.currentPointer.viewportX,
+            evt.currentPointer.viewportY);
+    console.log( '"lat":' + Math.abs(coord."lat".toFixed(4)) +
+        ((coord."lat" > 0) ? '' : '') +
+        ', "lng":' + Math.abs(coord."lng".toFixed(4)) +
+         ((coord."lng" > 0) ? '' : ''));
+})
+
+        $.post("http://172.31.18.84:9005/api/getAllMalls", function (data) {
+            for (i = 0; i < data.result.length; i++) {
+                console.log(data.result[i]."lat")
+
+                coords = { "lat": data.result[i]."lat", "lng": data.result[i]."lng" }
+                marker = new H.map.Marker(coords, { icon: icon });
                 map.addObject(marker);
-              //  mapInstance.addObject(marker);
-               // Add the group object to the map:
-               map.addObject(group);
-                
-              
-               
-
-               $.post( "http://172.31.18.84:9005/api/getAllMalls", function( data ) {
-                for ( i=0; i<data.result.length; i++)
-				{
-					console.log(data.result[i].lat)
-
-                    coords = {lat: data.result[i].lat, lng: data.result[i].lng},
-                marker = new H.map.Marker(coords, {icon: icon});
-                map.addObject(marker);
-                marker.addEventListener('tap', function(evt) {
-                 // Log 'tap' and 'mouse' events:
-                console.log(evt.currentTarget.b.lat); 
+                marker.count = false
+                marker.addEventListener('tap', function (evt) {
+                    // Log 'tap' and 'mouse' events:
+                   // console.log(evt);
+                    if( evt.target.count == false)
+                    {
 
                     var routingParameters = {
-                            // The routing mode:
-                            'mode': 'fastest;car',
-                            // The start point of the route:
-                            'waypoint0': 'geo!55.738262,37.541489',
-                            // The end point of the route:
-                            'waypoint1': 'geo!'+evt.currentTarget.b.lat+','+evt.currentTarget.b.lng,
-                            // To retrieve the shape of the route we choose the route
-                            // representation mode 'display'
-                            'representation': 'display'
-                            };
-                            var router = platform.getRoutingService();
-                            router.calculateRoute(routingParameters, onResult,
-                        function(error) {
+                        // The routing mode:
+                        'mode': 'fastest;car',
+                        // The start point of the route:
+                        'waypoint0': 'geo!55.738262,37.541489',
+                        // The end point of the route:
+                        'waypoint1': 'geo!' + evt.currentTarget.b."lat" + ',' + evt.currentTarget.b."lng",
+                        // To retrieve the shape of the route we choose the route
+                        // representation mode 'display'
+                        'representation': 'display'
+                    };
+                    evt.target.count = !evt.target.count ;
+                    console.log(evt.target.count);
+                    var router = p"lat"form.getRoutingService();
+                    router.calcu"lat"eRoute(routingParameters, onResult,
+                        function (error) {
                             alert(error.message);
                         });
+                       
 
+                    }  else {  // var targetElement = document.getElementById('map');
+
+// Get the default map types from the p"lat"form object:
+var defaultLayers = p"lat"form.createDefaultLayers();
+map.setZoom( 17);
+
+map.setCenter({"lat": evt.currentTarget.b."lat","lng": evt.currentTarget.b."lng"});
+
+
+// Add the venue layer to the map:
+map.addLayer(defaultLayers.venues);
+
+
+var points = [
+{ "lat":55.7455, "lng":37.5652},
+{ "lat":55.7454, "lng":37.5652},
+{ "lat":55.7453, "lng":37.5653},
+{ "lat":55.7452, "lng":37.5654},
+{ "lat":55.745, "lng":37.5654},
+{ "lat":55.745, "lng":37.5655},
+{ "lat":55.7449, "lng":37.5657},
+{ "lat":55.7449, "lng":37.5659},
+{ "lat":55.7449, "lng":37.5662},
+{ "lat":55.7448, "lng":37.5664},
+{ "lat":55.7448, "lng":37.5666},
+{ "lat":55.7447, "lng":37.5667},
+{ "lat":55.7446, "lng":37.5667},
+{ "lat":55.7445, "lng":37.5666},
+]
+
+var linestring = new H.geo.LineString();
+points.forEach(function(point) {
+  linestring.pushPoint(point);
+});
+
+// Initialize a polyline with the linestring:
+var polyline = new H.map.Polyline(linestring, { style: { lineWidth: 10 }});
+
+// Add the polyline to the map:
+map.addObject(polyline);
+
+// Zoom the map to make sure the whole polyline is visible:
+map.setViewBounds(polyline.getBounds());
+
+
+var heatmapProvider = new H.data.heatmap.Provider({
+                        colors: new H.data.heatmap.Colors({
+                        '0': 'blue',
+                        '0.5': 'yellow',
+                        '1': 'red'
+                        }, true),
+                        // Paint assumed values in regions where no data is available
+                        assumeValues: false
+                        });
+
+
+                    fetch('DataPoints-2.json')
+                            .then(function(response) {
+                                response.json().then(function(data) {
+                                    for (i=0; i<data.length;i++) {
+                                        heatmapProvider.addData([
+                                        {"lat": data[i]."lat", "lng": data[i]."lng", value: 1}
+                                        ]);
+                                        console.log(data[i]);
+                                    i++;
+                                }
+                                });
+                            });
+                        // Add the data
+                       
+
+                        // Create a semi-transparent heat map layer
+                        var heatmapLayer = new H.map.layer.TileLayer(heatmapProvider, {
+                        opacity: 0.6
+                        });
+
+                        // Add the layer to the map
+                        map.addLayer(heatmapLayer);
+
+
+
+}
                 });
-                }          
-               })
-         
-            
-              function addPlacesToMap(result) {
-                group.addObjects(result.items.map(function (place) {
-                var marker = new H.map.Marker({lat: place.position[0],
-                  lng: place.position[1]}, {icon: icon})
+            }
+        })
+
+
+        function addPlacesToMap(result) {
+            group.addObjects(result.items.map(function (place) {
+                var marker = new H.map.Marker({
+                    "lat": place.position[0],
+                    "lng": place.position[1]
+                }, { icon: icon })
                 return marker;
-                }));
-              }
-            
-            
-                      
-                           
-             
-            </script>
-          </body>
+            }));
+        }
+
+
+
+
+
+    </script>
+</body>
+
 </html>
